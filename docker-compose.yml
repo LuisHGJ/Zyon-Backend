@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-zyon
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: zyon
+      MYSQL_USER: zyonUser
+      MYSQL_PASSWORD: rootzyon
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - zyon_network
+
+volumes:
+  mysql_data:
+
+networks:
+  zyon_network:
+    driver: bridge
