@@ -24,9 +24,9 @@ public class TaskController {
     };
 
     @PostMapping
-    List<Task> create(@RequestBody Task task) {
-        return taskService.create(task);
-    };
+    public Task create(@RequestBody Task task) {
+        return taskService.create(task); 
+    }
 
     @GetMapping
     List<Task> list() {
