@@ -1,5 +1,7 @@
 package br.com.zyon.backend.entity;
 
+import java.sql.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,14 +15,14 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long usuarioID;
-    private Long cicloTempo;
     private String nome;
     private String descricao;
-    private String prioridade;
     private String dificuldade;
-    private Short energia;
-    private Short xp;
-    private Boolean realizado;
+    private Long cicloTempo;
+    private Boolean concluido;
+    private Short recompensaXp;
+    private String prioridade;
+    private Date dataAgendada;
 
     public Long getId() {
         return id;
@@ -78,27 +80,27 @@ public class Task {
         this.dificuldade = dificuldade;
     };
 
-    public Short getEnergia() {
-        return energia;
+    public Short getRecompensa_xp() {
+        return recompensaXp;
     };
 
-    public void setEnergia(Short energia) {
-        this.energia = energia;
+    public void setRecompensaXp(Short recompensaXp) {
+        this.recompensaXp = recompensaXp;
     };
 
-    public Short getXP() {
-        return xp;
+    public Boolean getConcluido() {
+        return concluido;
     };
 
-    public void setXP(Short xp) {
-        this.xp = xp;
+    public void setConcluido(Boolean concluido) {
+        this.concluido = concluido;
     };
 
-    public Boolean getRealizado() {
-        return realizado;
+    public Date getDataAgendada() {
+        return dataAgendada;
     };
 
-    public void setRealizado(Boolean realizado) {
-        this.realizado = realizado;
+    public void setDataAgendada(Date dataAgendada) {
+        this.dataAgendada = dataAgendada;
     };
 };
