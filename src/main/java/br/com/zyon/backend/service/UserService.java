@@ -1,6 +1,7 @@
 package br.com.zyon.backend.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -43,4 +44,9 @@ public class UserService {
         userRepository.deleteById(id);
         return list();
     };
+
+    public Optional<User> authenticate(String email, String senha) {
+        Optional<User> u = userRepository.findByEmail(email);
+        return u.filter(user -> user.getSenha()!= null && user.getSenha().equals(senha));
+    }
 };

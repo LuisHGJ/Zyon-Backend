@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import br.com.zyon.backend.entity.User;
 import br.com.zyon.backend.service.UserService;
@@ -47,4 +49,13 @@ public class UserController {
     List<User> delete(@PathVariable("id") Long id) {
         return userService.delete(id);
     };
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user) {
+        return userService.authenticate(user.getEmail(), user.getSenha())
+            .<ResponseEntity<?>>map(u -> ResponseEntity.ok(u))
+            .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                        .body("Email ou senha inválidos"));
+    }
+
 };
