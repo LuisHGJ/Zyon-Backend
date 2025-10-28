@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -50,12 +51,28 @@ public class UserController {
         return userService.delete(id);
     };
 
+    // Autenticação login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         return userService.authenticate(user.getEmail(), user.getSenha())
             .<ResponseEntity<?>>map(u -> ResponseEntity.ok(u))
             .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                         .body("Email ou senha inválidos"));
+    }
+
+    // Pesquisa para busca de usuário
+    @GetMapping("/email")
+    public ResponseEntity<User> findByEmail(@RequestParam String email) {
+        return userService.findByEmail(email)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Ranking de usuários 
+    @GetMapping("/ranking")
+    public ResponseEntity<List<User>> getRanking() {
+        List<User> ranking = userService.findAllOrderedByNivelXp();
+        return ResponseEntity.ok(ranking);
     }
 
 };

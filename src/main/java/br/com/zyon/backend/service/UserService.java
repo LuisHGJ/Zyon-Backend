@@ -45,8 +45,19 @@ public class UserService {
         return list();
     };
 
+    // Autenticação de usuário
     public Optional<User> authenticate(String email, String senha) {
         Optional<User> u = userRepository.findByEmail(email);
         return u.filter(user -> user.getSenha()!= null && user.getSenha().equals(senha));
+    }
+
+    // Pesquisa de usuário por email
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    // Ranking de usuários
+    public List<User> findAllOrderedByNivelXp() {
+        return userRepository.findAll(Sort.by(Direction.DESC, "xp"));
     }
 };
