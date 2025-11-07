@@ -19,6 +19,7 @@ public class User {
     private Short nivel;
     private Long xp;
     private String titulo;
+    private boolean paid = false;
 
     public Long getId() {
         return id;
@@ -74,5 +75,17 @@ public class User {
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public Boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Boolean paid) {
+        this.paid = paid;
     }
 }

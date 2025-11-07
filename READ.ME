@@ -6,3 +6,10 @@ docker compose up -d
 Depois, ainda na raíz, é só rodar a API com o comando:
 
 ./mvnw spring-boot:run
+
+É necessário criar um arquivo na raíz do projeto chamado ".env", 
+seguindo o modelo do env.exemplo, e inserir a Secret key da API da stripe,
+que se encontra no trello do projeto.
+
+Faça a mesma coisa para o front, porém utilizando a Publishable key
+(o modelo do arquivo também está na pasta raíz e a chave no trello)

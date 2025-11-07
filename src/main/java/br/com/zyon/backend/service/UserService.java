@@ -3,8 +3,10 @@ package br.com.zyon.backend.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.zyon.backend.entity.User;
@@ -14,14 +16,19 @@ import br.com.zyon.backend.repository.UserRepository;
 public class UserService {
     private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-    };
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User create(User user) {
-        userRepository.save(user);
-        return user;
-    };
+        user.setSenha(passwordEncoder.encode(user.getSenha())); // 🔥 ESSENCIAL
+        return userRepository.save(user);
+    }
+
 
     public List<User> list() {
         Sort sort = Sort.by(Direction.DESC, "xp")
@@ -34,11 +41,9 @@ public class UserService {
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
     
-    
-    public List<User> update(User user) {
-        userRepository.save(user);
-        return list();
-    };
+    public User update(User user) {
+        return userRepository.save(user);
+    }
 
     public List<User> delete(Long id) {
         userRepository.deleteById(id);
@@ -59,5 +64,12 @@ public class UserService {
     // Ranking de usuários
     public List<User> findAllOrderedByNivelXp() {
         return userRepository.findAll(Sort.by(Direction.DESC, "xp"));
+    }
+
+    public void markUserAsPaid(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        user.setPaid(true);
+        userRepository.save(user);
     }
 };
