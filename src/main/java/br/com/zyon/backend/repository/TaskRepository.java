@@ -5,5 +5,5 @@ import br.com.zyon.backend.entity.User;
 import br.com.zyon.backend.entity.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    List<Task> findByUsuarioIDOrderByPrioridadeDescIdAsc(Long usuarioID);
+    List<Task> findByUser(User user);
 }

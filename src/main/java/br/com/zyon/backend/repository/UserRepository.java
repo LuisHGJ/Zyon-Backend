@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u ORDER BY u.nivel DESC, u.xp DESC")
     List<User> findAllOrderedByNivelXp();
+
+    List<User> findByNomeContainingIgnoreCase(String nome);
 }

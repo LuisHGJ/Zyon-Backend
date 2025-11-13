@@ -25,10 +25,14 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public User create(User user) {
-        user.setSenha(passwordEncoder.encode(user.getSenha())); // 🔥 ESSENCIAL
+        user.setSenha(passwordEncoder.encode(user.getSenha()));
         return userRepository.save(user);
     }
 
+    // NOVO MÉTODO: Busca de usuários por parte do nome
+    public List<User> findByNomePartial(String nome) {
+        return userRepository.findByNomeContainingIgnoreCase(nome);
+    }
 
     public List<User> list() {
         Sort sort = Sort.by(Direction.DESC, "xp")
@@ -50,18 +54,15 @@ public class UserService {
         return list();
     };
 
-    // Autenticação de usuário
     public Optional<User> authenticate(String email, String senha) {
         Optional<User> u = userRepository.findByEmail(email);
-        return u.filter(user -> user.getSenha()!= null && user.getSenha().equals(senha));
-    }
+        return u.filter(user -> user.getSenha() != null && passwordEncoder.matches(senha, user.getSenha()));
+    } 
 
-    // Pesquisa de usuário por email
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    // Ranking de usuários
     public List<User> findAllOrderedByNivelXp() {
         return userRepository.findAll(Sort.by(Direction.DESC, "xp"));
     }
@@ -72,4 +73,4 @@ public class UserService {
         user.setPaid(true);
         userRepository.save(user);
     }
-};
+}

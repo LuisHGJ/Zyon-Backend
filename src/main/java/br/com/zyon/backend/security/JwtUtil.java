@@ -8,8 +8,8 @@ import java.security.Key;
 
 @Component
 public class JwtUtil {
-    private static final String SECRET = "minhaChaveSuperSecretaComMaisDe32Caracteres"; // troque!
-    private static final long EXPIRATION_TIME = 86400000; // 1 dia
+    private static final String SECRET = "minhaChaveSuperSecretaComMaisDe32Caracteres";
+    private static final long EXPIRATION_TIME = 86400000; 
 
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 

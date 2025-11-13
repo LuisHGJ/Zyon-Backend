@@ -102,6 +102,18 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+    
+    // NOVO ENDPOINT: Busca de usuário por nome (resolve o erro 400)
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsersByNome(@RequestParam("nome") String nome) {
+        List<User> users = userService.findByNomePartial(nome);
+        
+        if (users.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(users);
+    }
 
     @GetMapping("/ranking")
     public ResponseEntity<List<User>> getRanking() {

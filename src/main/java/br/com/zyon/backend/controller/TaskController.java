@@ -2,6 +2,8 @@ package br.com.zyon.backend.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,29 +21,27 @@ import br.com.zyon.backend.service.TaskService;
 @RequestMapping("/tasks")
 @CrossOrigin(origins = "http://localhost:3000")
 public class TaskController {
+    @Autowired
     private TaskService taskService;
 
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    };
-
-    @PostMapping
-    public Task create(@RequestBody Task task) {
-        return taskService.create(task); 
+    @GetMapping
+    public List<Task> listarTasks() {
+        return taskService.listarTasks();
     }
 
-    @GetMapping
-    List<Task> list() {
-        return taskService.list();
-    };
+    @PostMapping
+    public Task criarTask(@RequestBody Task task) {
+        return taskService.criarTask(task);
+    }
 
-    @PutMapping
-    List<Task> update(@RequestBody Task task) {
-        return taskService.update(task);
-    };
+    @PutMapping("/{id}")
+    public Task editarTask(@PathVariable Long id, @RequestBody Task novaTask) {
+        return taskService.editarTask(id, novaTask);
+    }
 
-    @DeleteMapping("{id}")
-    List<Task> delete(@PathVariable("id") Long id) {
-        return taskService.delete(id);
-    };
-};
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarTask(@PathVariable Long id) {
+        taskService.deletarTask(id);
+        return ResponseEntity.noContent().build();
+    }
+}

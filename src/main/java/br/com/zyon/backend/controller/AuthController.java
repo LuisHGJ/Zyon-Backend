@@ -61,9 +61,12 @@ public class AuthController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
+            // Adicione um log da exceção (use um logger real no código, como SLF4J/Logger)
+            System.err.println("Falha na autenticação para o email: " + email);
+            e.printStackTrace(); // Imprime o rastreamento completo da pilha
+
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Email ou senha inválidos"));
         }
     }
-    
 }
