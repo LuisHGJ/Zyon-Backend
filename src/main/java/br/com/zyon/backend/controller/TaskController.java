@@ -20,7 +20,7 @@ import br.com.zyon.backend.service.TaskService;
 
 @RestController
 @RequestMapping("/tasks")
-@CrossOrigin(origins = "http://localhost:3000")
+// @CrossOrigin(origins = "http://localhost:3000")
 public class TaskController {
     @Autowired
     private TaskService taskService;
