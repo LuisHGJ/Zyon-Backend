@@ -16,8 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Service
 public class TaskService {
 
-    private static final Short XP_FIXO_POR_TASK = 1000;
-
     @Autowired
     private TaskRepository taskRepository;
 
@@ -57,6 +55,7 @@ public class TaskService {
         }
         
         task.setUser(user);
+        task.setRecompensaXp(calcularXpPorDificuldade(task.getDificuldade()));
         return taskRepository.save(task);
     }
 
@@ -76,7 +75,7 @@ public class TaskService {
         task.setPrioridade(novaTask.getPrioridade());
         task.setCicloTempo(novaTask.getCicloTempo());
         task.setConcluido(novaTask.getConcluido());
-        task.setRecompensaXp(novaTask.getRecompensaXp());
+        task.setRecompensaXp(calcularXpPorDificuldade(task.getDificuldade()));
         task.setDataAgendada(novaTask.getDataAgendada());
 
         return taskRepository.save(task);
@@ -94,6 +93,23 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
+    private Short calcularXpPorDificuldade(String dificuldade) {
+        if (dificuldade == null) {
+            return 0; // Ou o valor padrão que você preferir
+        }
+        
+        switch (dificuldade) {
+            case "dificil":
+                return 500;
+            case "media":
+                return 300;
+            case "facil":
+                return 100;
+            default:
+                return 0;
+        }
+    }
+
     public User concluirTask(Long id) {
         User user = getAuthenticatedUser();
         Task task = taskRepository.findById(id)
@@ -103,18 +119,20 @@ public class TaskService {
             throw new RuntimeException("Você não tem permissão para concluir esta task");
         }
         
-        if (task.getConcluido() != null && task.getConcluido()) {
-            return user; 
-        }
-
         if (Boolean.TRUE.equals(task.getConcluido())) {
             return userService.findById(user.getId()); 
         }
+
         task.setConcluido(true);
         taskRepository.save(task);
 
-        Short xpGanho = XP_FIXO_POR_TASK;
+        Short xpGanho = task.getRecompensaXp();
 
+        if (xpGanho == null || xpGanho.equals(Short.valueOf((short) 0))) {
+            xpGanho = calcularXpPorDificuldade(task.getDificuldade());
+        }
+
+        task.setRecompensaXp(calcularXpPorDificuldade(task.getDificuldade()));
         return userService.addXpAndCheckLevelUp(user, xpGanho);
     }
 }
