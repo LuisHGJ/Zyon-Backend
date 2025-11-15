@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zyon.backend.entity.Task;
+import br.com.zyon.backend.entity.User;
 import br.com.zyon.backend.service.TaskService;
 
 @RestController
@@ -43,5 +44,18 @@ public class TaskController {
     public ResponseEntity<Void> deletarTask(@PathVariable Long id) {
         taskService.deletarTask(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<User> concluirTask(@PathVariable Long id) {
+        try {
+            User userAtualizado = taskService.concluirTask(id);
+            return ResponseEntity.ok(userAtualizado);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Task não encontrada")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.status(400).build();
+        }
     }
 }

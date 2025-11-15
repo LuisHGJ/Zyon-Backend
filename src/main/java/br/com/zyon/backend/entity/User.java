@@ -20,6 +20,7 @@ public class User {
     private Long xp;
     private String titulo;
     private boolean paid = false;
+    private String estacaoImagem;
 
     public Long getId() {
         return id;
@@ -87,5 +88,13 @@ public class User {
 
     public void setPaid(Boolean paid) {
         this.paid = paid;
+    }
+
+    public String getEstacaoImagem() {
+        return estacaoImagem;
+    }
+
+    public void setEstacaoImagem(String estacaoImagem) {
+        this.estacaoImagem = estacaoImagem;
     }
 }

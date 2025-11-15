@@ -15,11 +15,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Service
 public class TaskService {
+
+    private static final Short XP_FIXO_POR_TASK = 1000;
+
     @Autowired
     private TaskRepository taskRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService; 
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -45,6 +51,11 @@ public class TaskService {
 
     public Task criarTask(Task task) {
         User user = getAuthenticatedUser();
+        
+        if (task.getConcluido() == null) {
+            task.setConcluido(false);
+        }
+        
         task.setUser(user);
         return taskRepository.save(task);
     }
@@ -81,5 +92,29 @@ public class TaskService {
         }
 
         taskRepository.delete(task);
+    }
+
+    public User concluirTask(Long id) {
+        User user = getAuthenticatedUser();
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task não encontrada"));
+
+        if (!task.getUser().equals(user)) {
+            throw new RuntimeException("Você não tem permissão para concluir esta task");
+        }
+        
+        if (task.getConcluido() != null && task.getConcluido()) {
+            return user; 
+        }
+
+        if (Boolean.TRUE.equals(task.getConcluido())) {
+            return userService.findById(user.getId()); 
+        }
+        task.setConcluido(true);
+        taskRepository.save(task);
+
+        Short xpGanho = XP_FIXO_POR_TASK;
+
+        return userService.addXpAndCheckLevelUp(user, xpGanho);
     }
 }
